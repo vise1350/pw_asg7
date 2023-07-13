@@ -1,0 +1,129 @@
+<!-- HTML code -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Todo App</title>
+    <style>
+        .container {
+            margin: 20px;
+        }
+
+        .task-input {
+            display: inline-block;
+            width: 200px;
+        }
+
+        .task-list {
+            margin-top: 10px;
+        }
+
+        .completed {
+            background-color: #f2f2f2;
+            text-decoration: line-through;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 300px;
+        }
+
+        .modal input[type="text"],
+        .modal textarea {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .modal button {
+            display: block;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Todo App</h1>
+        <input type="text" id="taskInput" class="task-input" placeholder="Enter a task">
+        <button onclick="addTask()">Submit</button>
+        <ul id="taskList" class="task-list"></ul>
+    </div>
+
+    <!-- Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <h2>Edit Todo</h2>
+            <input type="text" id="editTaskInput" placeholder="Enter updated task">
+            <button onclick="updateTask()">Update</button>
+            <button onclick="closeModal()">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        var currentTaskItem;
+
+        function addTask() {
+            var input = document.getElementById("taskInput");
+            var task = input.value.trim();
+
+            if (task !== "") {
+                var taskList = document.getElementById("taskList");
+                var taskItem = document.createElement("li");
+                taskItem.innerHTML = task + " <button onclick='updateStatus(this.parentNode)'>Update Status</button> <button onclick='editTask(this.parentNode)'>Edit</button> <button onclick='deleteTask(this.parentNode)'>Delete Todo</button>";
+                taskList.appendChild(taskItem);
+                input.value = "";
+            }
+        }
+
+        function updateStatus(taskItem) {
+            taskItem.classList.toggle("completed");
+        }
+
+        function deleteTask(taskItem) {
+            var taskList = document.getElementById("taskList");
+            taskList.removeChild(taskItem);
+        }
+
+        function editTask(taskItem) {
+            currentTaskItem = taskItem;
+            var editTaskInput = document.getElementById("editTaskInput");
+            editTaskInput.value = taskItem.firstChild.textContent.trim();
+            openModal();
+        }
+
+        function updateTask() {
+            var editTaskInput = document.getElementById("editTaskInput");
+            var updatedTask = editTaskInput.value.trim();
+
+            if (updatedTask !== "") {
+                currentTaskItem.firstChild.textContent = updatedTask;
+                closeModal();
+            }
+        }
+
+        function openModal() {
+            var modal = document.getElementById("editModal");
+            modal.style.display = "block";
+        }
+
+        function closeModal() {
+            var modal = document.getElementById("editModal");
+            modal.style.display = "none";
+        }
+    </script>
+</body>
+</html>
